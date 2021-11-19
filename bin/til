@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+set -euf -o pipefail
+
+TIL_DIR="$HOME/Desktop/monorepo/notes/notes/til"
+mkdir -p $TIL_DIR
+
+file_name=$(echo "${1}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+
+if [ $# -eq 0 ]; then
+  echo "No title for the file was provided. Please provide a name."
+  exit 1
+fi
+
+PATH_TO_TODAYS_TIL="$TIL_DIR/$file_name.md"
+
+if [ -f "$PATH_TO_TODAYS_TIL" ]; then
+  "${VISUAL:-${EDITOR:-vi}}" "${PATH_TO_TODAYS_TIL}"
+  exit 0
+fi
+
+metadata=$(cat << EOF
+---
+title: "${1}"
+---
+
+# "${1}"
+
+EOF
+)
+
+echo "${metadata}" > "${PATH_TO_TODAYS_TIL}"
+
+"${VISUAL:-${EDITOR:-vi}}" "${PATH_TO_TODAYS_TIL}"

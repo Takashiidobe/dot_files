@@ -1,0 +1,790 @@
+diff --git a/.config/fish/config.fish b/.config/fish/config.fish
+index 4bc1dfb..1843e1c 100644
+--- a/.config/fish/config.fish
++++ b/.config/fish/config.fish
+@@ -19,9 +19,7 @@ only_add_if_login "$HOME/.local/bin"
+ only_add_if_login "$GOPATH/bin"
+ only_add_if_login "$HOME/.cargo/bin"
+ only_add_if_login "$HOME/.deno/bin"
+-only_add_if_login "/usr/local/smlnj/bin"
+ only_add_if_login "/usr/local/opt/luajit-openresty/bin"
+-only_add_if_login "/usr/local/Cellar/llvm/12.0.0/bin"
+ only_add_if_login "$HOME/.gem/ruby/2.7.0/bin"
+ 
+ only_add_if_login "$HOME/.jenv/bin"
+@@ -35,11 +33,8 @@ set -gx EDITOR "$HOME/.local/bin/lvim"
+ set -gx VISUAL "$HOME/.local/bin/lvim" 
+ set -gx PAGER bat
+ set -gx MANPAGER "$HOME/.local/bin/lvim -c 'set ft=man relativenumber number' -"
+-set -gx MONOREPO $HOME/Desktop/monorepo
+ 
+ if status is-login
+-  [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+-  
+   alias ls "gls -a --color=auto"
+   alias grep "grep --color=auto"
+   alias file_server "deno --allow-net https://deno.land/std/http/file_server.ts"
+@@ -47,12 +42,9 @@ if status is-login
+   alias pip3 "python3 -m pip"
+   alias python "python3"
+   alias pg_start "open /Applications/Postgres.app"
+-  alias ghci "stack ghci"
+-  alias pg_stop "osascript -e 'quit app \"Postgres.app\"'"
+   alias git "hub"
+-  alias more "bat"
+-  alias less "bat"
+-  alias cat "bat"
++  alias less bat
++  alias cat bat
+   
+   # BasicTex Support
+   eval /usr/libexec/path_helper
+@@ -71,17 +63,5 @@ if status is-login
+   nvm use --lts
+ end
+ 
+-function sync_books
+-  rsync -rvz -e "ssh -p 2222" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/books/" "192.168.1.227:/sdcard/Documents/books/"
+-end
+-
+-function sync_music
+-  rsync -rvz -e "ssh -p 2222" --update --progress /Volumes/External/music/ "192.168.1.227:/sdcard/Music"
+-end
+-
+-function sync_papers
+-  rsync -rvz -e "ssh -p 2222" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/papers" "192.168.1.227:/sdcard/Documents/papers/"
+-end
+-
+ set -g -x fish_greeting ''
+ clear
+diff --git a/.config/fish/fish_variables b/.config/fish/fish_variables
+index f481d4c..e91d2a8 100644
+--- a/.config/fish/fish_variables
++++ b/.config/fish/fish_variables
+@@ -30,4 +30,4 @@ SETUVAR fish_pager_color_completion:\x1d
+ SETUVAR fish_pager_color_description:B3A06D\x1eyellow
+ SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
+ SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
+-SETUVAR fish_user_paths:/usr/local/opt/binutils/bin\x1e/usr/local/opt/make/libexec/gnubin\x1e/usr/local/opt/gnu\x2dsed/libexec/gnubin\x1e/usr/local/opt/gnu\x2dtar/libexec/gnubin\x1e/usr/local/opt/grep/libexec/gnubin\x1e/usr/local/opt/findutils/libexec/gnubin\x1e/usr/local/opt/coreutils/libexec/gnubin\x1e/usr/local/bin\x1e/usr/local/Cellar/llvm/12\x2e0\x2e0/bin\x1e/usr/local/opt/luajit\x2dopenresty/bin\x1e/usr/local/smlnj/bin\x1e/Applications/Visual\x20Studio\x20Code\x2eapp/Contents/Resources/app/bin\x1e/Users/takashi/\x2edeno/bin\x1e/Users/takashi/\x2ecargo/bin\x1e/Users/takashi/go/bin
++SETUVAR fish_user_paths:/bin\x1e/Users/takashi\x2eidobe/\x2elocal/bin\x1e/Users/takashi\x2eidobe/\x2ecargo/bin\x1e/usr/local/opt/binutils/bin\x1e/usr/local/opt/make/libexec/gnubin\x1e/usr/local/opt/gnu\x2dsed/libexec/gnubin\x1e/usr/local/opt/gnu\x2dtar/libexec/gnubin\x1e/usr/local/opt/grep/libexec/gnubin\x1e/usr/local/opt/findutils/libexec/gnubin\x1e/usr/local/opt/coreutils/libexec/gnubin\x1e/usr/local/bin\x1e/usr/local/Cellar/llvm/12\x2e0\x2e0/bin\x1e/usr/local/opt/luajit\x2dopenresty/bin\x1e/usr/local/smlnj/bin\x1e/Applications/Visual\x20Studio\x20Code\x2eapp/Contents/Resources/app/bin\x1e/Users/takashi/\x2edeno/bin\x1e/Users/takashi/\x2ecargo/bin\x1e/Users/takashi/go/bin
+diff --git a/.config/lvim/plugin/packer_compiled.lua b/.config/lvim/plugin/packer_compiled.lua
+index d7ee594..a5e1577 100644
+--- a/.config/lvim/plugin/packer_compiled.lua
++++ b/.config/lvim/plugin/packer_compiled.lua
+@@ -44,8 +44,8 @@ local function save_profiles(threshold)
+ end
+ 
+ time([[Luarocks path setup]], true)
+-local package_path_str = "/Users/takashi/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?.lua;/Users/takashi/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?/init.lua;/Users/takashi/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?.lua;/Users/takashi/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?/init.lua"
+-local install_cpath_pattern = "/Users/takashi/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/lua/5.1/?.so"
++local package_path_str = "/Users/takashi.idobe/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?.lua;/Users/takashi.idobe/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?/init.lua;/Users/takashi.idobe/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?.lua;/Users/takashi.idobe/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?/init.lua"
++local install_cpath_pattern = "/Users/takashi.idobe/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/lua/5.1/?.so"
+ if not string.find(package.path, package_path_str, 1, true) then
+   package.path = package.path .. ';' .. package_path_str
+ end
+@@ -71,73 +71,73 @@ time([[Defining packer_plugins]], true)
+ _G.packer_plugins = {
+   ["FixCursorHold.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/FixCursorHold.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/FixCursorHold.nvim"
+   },
+   LuaSnip = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/LuaSnip"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/LuaSnip"
+   },
+   ["barbar.nvim"] = {
+     config = { "\27LJ\2\n=\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\20core.bufferline\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/barbar.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/barbar.nvim"
+   },
+   ["cmp-buffer"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/cmp-buffer"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/cmp-buffer"
+   },
+   ["cmp-nvim-lsp"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/cmp-nvim-lsp"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/cmp-nvim-lsp"
+   },
+   ["cmp-nvim-lua"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/cmp-nvim-lua"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/cmp-nvim-lua"
+   },
+   ["cmp-path"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/cmp-path"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/cmp-path"
+   },
+   cmp_luasnip = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/cmp_luasnip"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/cmp_luasnip"
+   },
+   ["dashboard-nvim"] = {
+     config = { "\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19core.dashboard\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/dashboard-nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/dashboard-nvim"
+   },
+   ["friendly-snippets"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/friendly-snippets"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/friendly-snippets"
+   },
+   ["gitsigns.nvim"] = {
+     config = { "\27LJ\2\n;\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\18core.gitsigns\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/gitsigns.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/gitsigns.nvim"
+   },
+   ["lualine.nvim"] = {
+     config = { "\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.lualine\frequire\0" },
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/lualine.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/lualine.nvim"
+   },
+   ["nlsp-settings.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/nlsp-settings.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/nlsp-settings.nvim"
+   },
+   ["null-ls.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/null-ls.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/null-ls.nvim"
+   },
+   ["nvim-autopairs"] = {
+     config = { "\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19core.autopairs\frequire\0" },
+     load_after = {},
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/nvim-autopairs"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/nvim-autopairs"
+   },
+   ["nvim-cmp"] = {
+     after = { "nvim-autopairs" },
+@@ -148,79 +148,83 @@ _G.packer_plugins = {
+     config = { "\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.comment\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/nvim-comment"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/nvim-comment"
+   },
+   ["nvim-lspconfig"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/nvim-lspconfig"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/nvim-lspconfig"
+   },
+   ["nvim-lspinstall"] = {
+     config = { "\27LJ\2\n=\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\1\2\0B\1\1\1K\0\1\0\nsetup\20core.lspinstall\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/nvim-lspinstall"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/nvim-lspinstall"
+   },
+   ["nvim-tree.lua"] = {
+     config = { "\27LJ\2\n;\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\18core.nvimtree\frequire\0" },
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/nvim-tree.lua"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/nvim-tree.lua"
+   },
+   ["nvim-treesitter"] = {
+     config = { "\27LJ\2\n=\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\20core.treesitter\frequire\0" },
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/nvim-treesitter"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/nvim-treesitter"
+   },
+   ["nvim-web-devicons"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/nvim-web-devicons"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/nvim-web-devicons"
+   },
+   ["packer.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/packer.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/packer.nvim"
+   },
+   ["plenary.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/plenary.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/plenary.nvim"
+   },
+   ["popup.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/popup.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/popup.nvim"
+   },
+   ["project.nvim"] = {
+     config = { "\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.project\frequire\0" },
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/project.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/project.nvim"
+   },
+   ["telescope.nvim"] = {
+     config = { "\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19core.telescope\frequire\0" },
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/telescope.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/telescope.nvim"
+   },
+   ["toggleterm.nvim"] = {
+     config = { "\27LJ\2\n;\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\18core.terminal\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/toggleterm.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/toggleterm.nvim"
+   },
+   ["tokyonight.nvim"] = {
+     loaded = true,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/start/tokyonight.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/start/tokyonight.nvim"
+   },
+   ["trouble.nvim"] = {
+     commands = { "TroubleToggle" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/trouble.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/trouble.nvim"
+   },
+   ["which-key.nvim"] = {
+     config = { "\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19core.which-key\frequire\0" },
+     loaded = false,
+     needs_bufread = false,
+-    path = "/Users/takashi/.local/share/lunarvim/site/pack/packer/opt/which-key.nvim"
++    path = "/Users/takashi.idobe/.local/share/lunarvim/site/pack/packer/opt/which-key.nvim"
+   }
+ }
+ 
+ time([[Defining packer_plugins]], false)
++-- Config for: project.nvim
++time([[Config for project.nvim]], true)
++try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.project\frequire\0", "config", "project.nvim")
++time([[Config for project.nvim]], false)
+ -- Config for: telescope.nvim
+ time([[Config for telescope.nvim]], true)
+ try_loadstring("\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\19core.telescope\frequire\0", "config", "telescope.nvim")
+@@ -229,18 +233,14 @@ time([[Config for telescope.nvim]], false)
+ time([[Config for nvim-treesitter]], true)
+ try_loadstring("\27LJ\2\n=\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\20core.treesitter\frequire\0", "config", "nvim-treesitter")
+ time([[Config for nvim-treesitter]], false)
+--- Config for: nvim-tree.lua
+-time([[Config for nvim-tree.lua]], true)
+-try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\18core.nvimtree\frequire\0", "config", "nvim-tree.lua")
+-time([[Config for nvim-tree.lua]], false)
+--- Config for: project.nvim
+-time([[Config for project.nvim]], true)
+-try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.project\frequire\0", "config", "project.nvim")
+-time([[Config for project.nvim]], false)
+ -- Config for: lualine.nvim
+ time([[Config for lualine.nvim]], true)
+ try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\17core.lualine\frequire\0", "config", "lualine.nvim")
+ time([[Config for lualine.nvim]], false)
++-- Config for: nvim-tree.lua
++time([[Config for nvim-tree.lua]], true)
++try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\18core.nvimtree\frequire\0", "config", "nvim-tree.lua")
++time([[Config for nvim-tree.lua]], false)
+ -- Config for: nvim-cmp
+ time([[Config for nvim-cmp]], true)
+ try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rcore.cmp\frequire\0", "config", "nvim-cmp")
+@@ -255,9 +255,9 @@ vim.cmd [[augroup packer_load_aucmds]]
+ vim.cmd [[au!]]
+   -- Event lazy-loads
+ time([[Defining lazy-load event autocommands]], true)
++vim.cmd [[au BufRead * ++once lua require("packer.load")({'gitsigns.nvim', 'nvim-comment'}, { event = "BufRead *" }, _G.packer_plugins)]]
+ vim.cmd [[au VimEnter * ++once lua require("packer.load")({'nvim-lspinstall'}, { event = "VimEnter *" }, _G.packer_plugins)]]
+ vim.cmd [[au BufWinEnter * ++once lua require("packer.load")({'toggleterm.nvim', 'which-key.nvim', 'barbar.nvim', 'dashboard-nvim'}, { event = "BufWinEnter *" }, _G.packer_plugins)]]
+-vim.cmd [[au BufRead * ++once lua require("packer.load")({'gitsigns.nvim', 'nvim-comment'}, { event = "BufRead *" }, _G.packer_plugins)]]
+ time([[Defining lazy-load event autocommands]], false)
+ vim.cmd("augroup END")
+ if should_profile then save_profiles() end
+diff --git a/.home/.gitconfig b/.home/.gitconfig
+index 156c008..ae02437 100644
+--- a/.home/.gitconfig
++++ b/.home/.gitconfig
+@@ -1,7 +1,6 @@
+ [user]
+-    email = idobetakashi@gmail.com
++    email = takashi.idobe@zendesk.com 
+     name = takashiidobe
+-	  signingkey = E3A1FC139769A829
+ [core]
+     excludesfile = /Users/takashi/.gitignore_global
+ 	  editor = nvim
+@@ -38,7 +37,3 @@
+     diffFilter = delta --color-only
+ [init]
+ 	defaultBranch = master
+-[credential]
+-	helper = osxkeychain
+-[commit]
+-	gpgsign = true
+diff --git a/.home/.gnupg/crls.d/DIR.txt b/.home/.gnupg/crls.d/DIR.txt
+new file mode 100644
+index 0000000..2a29a47
+--- /dev/null
++++ b/.home/.gnupg/crls.d/DIR.txt
+@@ -0,0 +1 @@
++v:1:
+diff --git a/.home/.gnupg/pubring.kbx b/.home/.gnupg/pubring.kbx
+new file mode 100644
+index 0000000..2330e83
+Binary files /dev/null and b/.home/.gnupg/pubring.kbx differ
+diff --git a/.home/.gnupg/pubring.kbx~ b/.home/.gnupg/pubring.kbx~
+new file mode 100644
+index 0000000..076f64d
+Binary files /dev/null and b/.home/.gnupg/pubring.kbx~ differ
+diff --git a/.home/.gnupg/trustdb.gpg b/.home/.gnupg/trustdb.gpg
+new file mode 100644
+index 0000000..72d28db
+Binary files /dev/null and b/.home/.gnupg/trustdb.gpg differ
+diff --git a/.home/Brewfile b/.home/Brewfile
+index d81a65d..a0ba39b 100644
+--- a/.home/Brewfile
++++ b/.home/Brewfile
+@@ -1,250 +1,41 @@
+-tap "bazelbuild/tap"
+-tap "clojure-lsp/brew"
+-tap "dopplerhq/cli"
+-tap "git-chglog/git-chglog"
+-tap "github/gh"
+-tap "heroku/brew"
+-tap "homebrew/bundle"
+-tap "homebrew/cask"
+ tap "homebrew/cask-fonts"
+-tap "homebrew/cask-versions"
+-tap "homebrew/core"
+-tap "homebrew/services"
+-tap "indlin/postgresql-py"
+-tap "jez/formulae"
++tap "github/gh"
+ tap "koekeishiya/formulae"
+-tap "lampepfl/brew"
+-tap "minio/stable"
+-tap "nektos/tap"
+-tap "petere/postgresql"
+-tap "px4/px4"
+-tap "shellspec/shellspec"
+-tap "snaipe/soft"
+-tap "stripe/stripe-cli"
+-tap "superfly/tap"
+-tap "thought-machine/please"
+-tap "weihanglo/sfz", "https://github.com/weihanglo/sfz.git"
+-brew "readline"
+-brew "glib"
+-brew "pkg-config"
+-brew "jpeg"
+-brew "libtiff"
+-brew "gdk-pixbuf"
+-brew "gobject-introspection"
+-brew "harfbuzz"
+-brew "pango"
+-brew "librsvg"
+-brew "adwaita-icon-theme"
+-brew "apib"
+-brew "apktool"
+-brew "tcl-tk"
+-brew "python@3.8"
+-brew "autoconf"
+-brew "autojump"
+-brew "automake"
+-brew "bash"
+-brew "bat"
+ brew "binutils"
+-brew "caddy"
+-brew "calcurse"
+ brew "clang-format"
+-brew "cloc"
+-brew "rlwrap"
+-brew "clojure"
+-brew "cmake"
+-brew "libtool"
+-brew "nghttp2"
+-brew "unbound"
+-brew "gnutls"
+-brew "little-cms2"
+-brew "webp"
+-brew "libass"
+-brew "srt"
+-brew "ffmpeg"
+-brew "cmus"
+-brew "comby"
+ brew "coreutils"
+-brew "datasette", link: false
+-brew "dbmate"
+-brew "deno"
+-brew "dict"
+ brew "diffutils"
+-brew "ghostscript"
+-brew "djvu2pdf"
+-brew "dub"
+-brew "erlang"
+-brew "elixir"
+-brew "entr"
+-brew "exa"
+-brew "exercism"
+-brew "fd"
+ brew "findutils"
+ brew "fish"
+ brew "flamegraph"
+-brew "fmt"
+-brew "zstd"
+-brew "fswatch"
+ brew "fzf"
+ brew "gawk"
+-brew "gcc"
+ brew "gdb"
+ brew "gh"
+-brew "git"
+ brew "git-delta"
+-brew "glow"
+-brew "gnu-sed"
+ brew "gnu-tar"
+-brew "gsettings-desktop-schemas"
+-brew "gtk+3"
+-brew "goffice"
+-brew "itstool"
+-brew "gnumeric"
+-brew "libksba"
+ brew "gnupg"
+-brew "go"
+-brew "goaccess"
+-brew "google-benchmark"
+-brew "gperftools"
+-brew "gradle"
+ brew "graphviz"
+-brew "grep"
+-brew "haproxy"
+-brew "haskell-stack"
+ brew "lua"
+-brew "highlight"
+-brew "hledger"
+-brew "html-xml-utils"
+ brew "httpie"
+ brew "hub"
+-brew "hugo"
+-brew "hyperfine"
+-brew "libheif"
+-brew "imagemagick"
+-brew "ipython", link: false
+-brew "jenv"
+-brew "jose"
+-brew "jpegoptim"
+ brew "jq"
+-brew "zookeeper"
+-brew "kafka"
+-brew "kotlin"
+-brew "krb5"
+-brew "leiningen"
+-brew "libslirp"
+-brew "libssh"
+-brew "libyaml"
+-brew "libxslt"
+-brew "llvm"
+ brew "luajit", args: ["HEAD"]
+ brew "luarocks"
+-brew "lynx"
+-brew "make"
+-brew "mandoc"
+-brew "mdbook"
+-brew "minimal-racket"
+-brew "mit-scheme"
+-brew "mkcert"
+ brew "moreutils"
+-brew "protobuf"
+ brew "mosh"
+-brew "mplayer"
+-brew "mvnvm"
+-brew "nasm"
+ brew "neovim", args: ["HEAD"]
+ brew "newsboat"
+-brew "ngrep"
+-brew "nmap"
+-brew "nss"
+ brew "nvm"
+-brew "opam"
+-brew "openblas"
+-brew "openldap"
+-brew "pdftk-java"
+-brew "perl"
+-brew "pgformatter"
+ brew "pinentry-mac"
+-brew "poppler"
+-brew "portaudio"
+-brew "postgresql"
+-brew "pup"
+-brew "pv"
+-brew "pyenv"
+-brew "qemu"
+-brew "qpdf"
+-brew "qt"
+-brew "r"
+-brew "rabbitmq"
+-brew "redis", restart_service: true
+-brew "remind"
+-brew "rename"
+-brew "rethinkdb"
+-brew "rustup-init"
+-brew "sbt"
+-brew "scc"
+ brew "sccache"
+-brew "sdcv"
+-brew "shfmt"
+-brew "spdlog"
+ brew "ssh-copy-id"
+-brew "stolon"
+ brew "stow"
+-brew "subversion"
+-brew "taskell"
+-brew "tealdeer"
+-brew "telnet"
+-brew "the_silver_searcher"
+ brew "tmux"
+-brew "tree"
+-brew "watchexec"
+-brew "watchman"
+-brew "websocketd"
+-brew "wget"
+-brew "wireshark"
+-brew "youtube-dl", link: false
+-brew "zlib"
+-brew "zola"
+-brew "zsh"
+-brew "zsh-autosuggestions"
+-brew "zsh-completions"
+-brew "clojure-lsp/brew/clojure-lsp-native"
+-brew "dopplerhq/cli/doppler"
+-brew "git-chglog/git-chglog/git-chglog"
+-brew "heroku/brew/heroku"
+-brew "jez/formulae/pandoc-sidenote"
+ brew "koekeishiya/formulae/skhd"
+ brew "koekeishiya/formulae/yabai"
+-brew "lampepfl/brew/dotty"
+-brew "minio/stable/mc"
+-brew "nektos/tap/act"
+-brew "px4/px4/gcc-arm-none-eabi"
+-brew "shellspec/shellspec/shellspec"
+-brew "stripe/stripe-cli/stripe"
+-brew "superfly/tap/flyctl"
+-brew "weihanglo/sfz/sfz"
+ cask "adoptopenjdk"
+-cask "adoptopenjdk8"
+-cask "alfred"
+-cask "android-file-transfer"
+-cask "android-platform-tools"
+-cask "basictex"
+-cask "cabal"
+-cask "dbeaver-community"
+-cask "discord"
+ cask "dteoh-devdocs"
+-cask "firefox", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+-cask "google-chrome"
+-cask "iterm2"
+-cask "julia"
+-cask "notion"
+-cask "pgadmin4"
+-cask "postgres"
+-cask "postman", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+-cask "rstudio"
+-cask "skype"
+-cask "slack", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+-cask "smlnj"
+-cask "steam"
+-cask "transmission"
+-cask "visual-studio-code", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+-cask "vlc"
+-cask "wkhtmltopdf"
++cask "postman"
++cask "visual-studio-code"
++cask "font-hack-nerd-font"
+diff --git a/.home/Brewfile-minimal b/.home/Brewfile-minimal
+deleted file mode 100644
+index fea3916..0000000
+--- a/.home/Brewfile-minimal
++++ /dev/null
+@@ -1,39 +0,0 @@
+-tap "github/gh"
+-tap "koekeishiya/formulae"
+-brew "binutils"
+-brew "clang-format"
+-brew "coreutils"
+-brew "diffutils"
+-brew "findutils"
+-brew "fish"
+-brew "flamegraph"
+-brew "fzf"
+-brew "gawk"
+-brew "gdb"
+-brew "gh"
+-brew "git-delta"
+-brew "gnu-tar"
+-brew "gnupg"
+-brew "graphviz"
+-brew "lua"
+-brew "httpie"
+-brew "hub"
+-brew "jq"
+-brew "luajit", args: ["HEAD"]
+-brew "luarocks"
+-brew "moreutils"
+-brew "mosh"
+-brew "neovim", args: ["HEAD"]
+-brew "newsboat"
+-brew "nvm"
+-brew "pinentry-mac"
+-brew "sccache"
+-brew "ssh-copy-id"
+-brew "stow"
+-brew "tmux"
+-brew "koekeishiya/formulae/skhd"
+-brew "koekeishiya/formulae/yabai"
+-cask "adoptopenjdk"
+-cask "dteoh-devdocs"
+-cask "postman", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+-cask "visual-studio-code", args: { appdir: "~/Desktop/dot_files/'/Applications'" }
+diff --git a/setup.sh b/setup.sh
+index b8d88ae..9966109 100755
+--- a/setup.sh
++++ b/setup.sh
+@@ -49,28 +49,9 @@ info() {
+   fi
+ }
+ 
+-####################################################
+-############ Xcode Command Line Tools ##############
+-####################################################
+-
+-install_xcode_select() {
+-  yes "" | xcode-select --install
+-}
+-
+-# Install command line tools
+-install "xcode-select" install_xcode_select
+-
+ ####################################################
+ ##################### HOMEBREW #####################
+ ####################################################
+-
+-install_brew() {
+-  yes "" | /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+-}
+-
+-# Install Homebrew
+-install "brew" install_brew
+-
+ # Granting Admin access to Homebrew directory
+ run "sudo chown -R $(whoami) /usr/local/*"
+ 
+@@ -87,23 +68,21 @@ run "brew update"
+ info "Updating ~/.bash_profile to link to homebrew" "$(echo 'PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile)"
+ 
+ # Setup dirs
+-mkdir -p ~/.local/share/nvim/plugged
+ mkdir -p ~/.config/{nvim,less,config,fish}
+-mkdir -p ~/.config/coc/extensions
+ mkdir -p ~/.cargo
+ mkdir -p ~/Library/Preferences/clangd 
+ mkdir -p ~/Library/Application\ Support/Code/User
+ 
+ # Install Homebrew Dependencies
+ install_brew_deps() {
+-  brew bundle --global
++  brew bundle install .home/Brewfile 
+ }
+ 
+ run install_brew_deps
+ 
+ ## Setup fish
+-sudo echo /usr/local/bin/fish >> /etc/shells
+-chsh -s /usr/local/bin/fish
++sudo echo "/usr/local/bin/fish" >> /etc/shells
++sudo chsh -s /usr/local/bin/fish
+ 
+ # Link Files
+ stow -v -R -t ~ .home 
+@@ -112,15 +91,10 @@ stow -v -R -t /usr/local/bin bin
+ stow -v -R -t ~/Library Library
+ stow -v -R -t ~/.ssh .ssh 
+ 
+-# Install Python
+-run "pip3 install --upgrade setuptools"
+-run "pip3 install --upgrade pip"
+-
+-install_pip_deps() {
+-  pip3 install -r ~/.Pipfile
+-}
++# Install nvm
++curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+ 
+-run install_pip_deps
++nvm install stable
+ 
+ # Install Ruby
+ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+@@ -129,57 +103,15 @@ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703
+ 
+ rvm install stable
+ 
+-# Install Nodejs
+-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+-nvm install --lts
+-
+ # Install Rust
+-install "rustup-init" "yes '1' | rustup-init"
++yes 1 | curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+ 
+-# Initialize opam
+-run "yes | opam init"
+-
+-install_opam_deps() {
+-  opam switch import ~/.opam-deps
+-}
+-
+-info "installing opam dependencies" install_opam_deps
+-
+-setup_gitignore() {
+-  git config --global core.excludesfile ~/.gitignore_global
+-}
+-
+-info "setting up global gitignore file" setup_gitignore
+-
+-# Install cargo deps
+-install_cargo_deps() {
+-  cargo install $(cat .cargo-deps)
+-}
+-
+-info "installing cargo deps" install_cargo_deps
+-
+-############### Install Vim Plug ##################
+-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
++# Install Lunarvim
++bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+ 
+ # Cleanup homebrew at end
+ run "brew cleanup"
+ 
+ source ~/.gitignore_global
+ source ~/.inputrc
+-source ~/.config/nvim/init.vim
+ source ~/.config/fish/config.fish
+-
+-# Setup postgres start command
+-ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
+-# Setup redis
+-ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
+-
+-# start postgres
+-run "pg_start"
+-
+-# create postgres accounts.
+-info "creating root account for Postgres" "createdb $(whoami)"
+-info "creating postgres user for Postgres" "createuser -s postgres"
+-
+-# stop postgres
+-run "pg_stop"

@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "@cloudflare/wrangler": "^1.19.3",
+    "bash-language-server": "^2.0.0",
+    "dockerfile-language-server-nodejs": "^0.7.2",
+    "foam-cli": "0.9.0",
+    "foam-core": "^0.13.7",
+    "lodash": "^4.17.21",
+    "markdown-it-wikilinks": "^1.0.1",
+    "markdown-lint": "^0.0.4",
+    "markdown-toc": "^1.2.0",
+    "neovim": "^4.10.0",
+    "netlify-cli": "^5.2.3",
+    "pandiff": "^0.5.0",
+    "prettier": "^2.4.0",
+    "tree-sitter-cli": "^0.20.0",
+    "typescript": "^4.4.2",
+    "typescript-language-server": "^0.6.2",
+    "unified-language-server": "^0.3.0",
+    "vscode-langservers-extracted": "^3.0.1",
+    "yaml-language-server": "^1.1.1"
+  },
+  "name": "dot_files",
+  "description": "[setup.sh](setup.sh) is for setting up vim, git, languages, command line tools and basic applications.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

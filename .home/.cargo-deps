@@ -1,0 +1,14 @@
+cargo-cache
+cargo-fuzz
+cargo-watch
+diesel
+drill
+cargo-flamegraph
+flamegraph
+ht
+leetcode
+mdbook-epub
+miniserve
+ripgrep
+systemfd
+wasm-pack

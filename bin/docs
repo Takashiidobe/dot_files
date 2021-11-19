@@ -1,0 +1,11 @@
+#!/usr/bin/env bash 
+
+docset=$1 
+query=$2 
+
+query_string=$(cat << EOF
+tell application "DevDocs" to open location "devdocs-macos://search?doc=${docset}&term=${query}"
+EOF
+)
+
+osascript -e "$query_string"

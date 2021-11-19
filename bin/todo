@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR EXIT
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+
+# This allows the script to properly count days on the weekend.
+WEEKEND_MODE=0
+
+usage() {
+  cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [-h]
+
+Write down your todos.
+
+Available options:
+
+-h, --help      Print this help and exit
+-y, --yesterday Go to Yesterday's Todo
+-t, --tomorrow  Go to Tomorrow's Todo
+"GNU_DATE_STRING" Go to date specified in argument
+EOF
+  exit
+}
+
+cleanup() {
+  trap - SIGINT SIGTERM ERR EXIT
+}
+
+setup_colors() {
+  if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
+    NOFORMAT='\033[0m' RED='\033[0;31m' GREEN='\033[0;32m' ORANGE='\033[0;33m' BLUE='\033[0;34m' PURPLE='\033[0;35m' CYAN='\033[0;36m' YELLOW='\033[1;33m'
+  else
+    NOFORMAT='' RED='' GREEN='' ORANGE='' BLUE='' PURPLE='' CYAN='' YELLOW=''
+  fi
+}
+
+msg() {
+  echo >&2 -e "${1-}"
+}
+
+die() {
+  local msg=$1
+  local code=${2-1} # default exit status 1
+  msg "$msg"
+  exit "$code"
+}
+
+TODO_PATH="$HOME/Desktop/monorepo/.todo"
+mkdir -p $TODO_PATH
+
+if [ $# -eq 0 ]; then
+  FROM_DATE=$(gdate)
+else
+  FROM_DATE=$(gdate -d "$1")
+fi
+
+DAY_OF_WEEK=$(gdate +%w --date="${FROM_DATE}")
+TODO_DAY=$(gdate -d "${FROM_DATE}" +%m-%d-%Y)
+
+last_workday() {
+    if [ $WEEKEND_MODE -ne 1 ]; then
+      if [ ${DAY_OF_WEEK} == "0" ]; then
+          TODO_DAY="$(gdate -d "${FROM_DATE} - 2 day" +'%m-%d-%Y')"
+      elif [ ${DAY_OF_WEEK} == "1" ]; then
+          TODO_DAY="$(gdate -d "${FROM_DATE} - 3 day" +'%m-%d-%Y')"
+      fi
+    else
+      TODO_DAY="$(gdate -d "${FROM_DATE} - 1 day" +'%m-%d-%Y')"
+    fi
+}
+
+next_workday() {
+    if [ $WEEKEND_MODE -ne 1 ]; then
+      if [ ${DAY_OF_WEEK} == "5" ]; then
+          TODO_DAY="$(gdate -d "${FROM_DATE} + 3 day" +'%m-%d-%Y')"
+      elif [ ${DAY_OF_WEEK} == "6" ]; then
+          TODO_DAY="$(gdate -d "${FROM_DATE} + 2 day" +'%m-%d-%Y')"
+      fi
+    else
+      TODO_DAY="$(gdate -d "${FROM_DATE} + 1 day" +'%m-%d-%Y')"
+    fi
+}
+
+parse_params() {
+  # default values of variables set from params
+  flag=0
+  param=''
+
+  case "${1-}" in
+    -h | --help) usage ;;
+    -t | --tomorrow) next_workday ;;
+    -y | --yesterday) last_workday ;;
+    -?*) die "Unknown option: $1" ;;
+  esac
+
+  args=("$@")
+
+  return 0
+}
+
+parse_params "$@"
+setup_colors
+
+###### script logic here ########
+TODO_MONTH="$(echo $TODO_DAY | cut -c 1-2)"
+TODO_YEAR="$(echo $TODO_DAY | cut -c 7-11)"
+
+TODO_TO_OPEN="$TODO_PATH/$TODO_YEAR/$TODO_MONTH/$TODO_DAY.md"
+
+
+if [ ! -f $TODO_TO_OPEN ]; then
+	mkdir -p $TODO_PATH/$TODO_YEAR/$TODO_MONTH
+  echo -e "# $TODO_DAY\n" >> $TODO_TO_OPEN
+fi
+
+${VISUAL:-${EDITOR:-vi}} $TODO_TO_OPEN

@@ -1,0 +1,25 @@
+If:
+  PathMatch: [.*\.c, .*\.h]
+CompileFlags:                                 
+  Add: [-std=c17, -Wpedantic, -Wall]   
+
+---
+   
+If:
+  PathMatch: [.*\.cc, .*\.cpp, .*\.hh, .*\.hpp]
+CompileFlags:                                 
+  Add: 
+    - -std=c++20 
+    - -Wpedantic
+    - -Wall
+    - -Wcast-qual
+    - -Wconversion-null
+    - -Wmissing-declarations
+    - -Woverlength-strings
+    - -Wpointer-arith
+    - -Wunused-local-typedefs
+    - -Wunused-result
+    - -Wvarargs
+    - -Wvla
+    - -Wwrite-strings
+    - --include-directory=/usr/include

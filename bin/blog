@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+set -euf -o pipefail
+IFS='\n'
+
+if [ $# -eq 0 ]; then
+  echo "Please provide an argument for the blog title."
+  exit 1
+fi
+
+BLOG_DIR="$MONOREPO/blog/posts"
+file_name="$(echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+
+metadata=$(cat << EOF
+---
+title: "$1"
+date: $(gdate --iso-8601=seconds)
+draft: true
+---
+EOF
+)
+
+full_path="${BLOG_DIR}/${file_name}.md"
+
+if [ ! -f "$full_path" ]; then
+  echo "$metadata" > "$full_path"
+fi
+
+$EDITOR "${full_path}"
+exit 0
