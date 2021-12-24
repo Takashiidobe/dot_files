@@ -76,7 +76,7 @@ if status is-login
   nvm use --lts
 end
 
-source ~/.config/fish/functions/sync.fish
+source ~/.config/fish/functions/custom.fish
 
 set -g -x fish_greeting ''
 clear

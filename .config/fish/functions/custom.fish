@@ -13,6 +13,11 @@ function sync_papers
   rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/papers" "$ssh_ip:/sdcard/Documents/papers/"
 end
 
-function kill_docker
-  ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
+function dl-mp3 -a URL
+  yt-dlp -x --audio-format mp3 "$URL"
 end
+
+function dl-video -a URL
+  yt-dlp --embed-chapters --embed-metadata --embed-thumbnail "$URL"
+end
+
