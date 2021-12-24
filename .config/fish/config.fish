@@ -48,7 +48,7 @@ set -gx PKG_CONFIG_PATH "/usr/local/opt/openssl@3/lib/pkgconfig"
 
 if status is-login
   [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
-  
+
   alias ls "gls -a --color=auto"
   alias grep "grep --color=auto"
   alias file_server "deno --allow-net https://deno.land/std/http/file_server.ts"
@@ -59,38 +59,24 @@ if status is-login
   alias more "bat"
   alias less "bat"
   alias cat "bat"
-  
+
   # BasicTex Support
   eval /usr/libexec/path_helper
-  
+
   set FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --no-ignore-vcs'
-  
+
   set -x GOPATH "$HOME/go"
   # uncomment when using ruby
-  rvm default
-  
+  # rvm default
+
   # uncomment when using java
   # status --is-interactive; and source (jenv init -| psub)
-  
+
   # uncomment when using node
   nvm use --lts
 end
 
-function sync_books
-  rsync -rvz -e "ssh -p 2222" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/books/" "192.168.1.227:/sdcard/Documents/books/"
-end
-
-function sync_music
-  rsync -rvz -e "ssh -p 2222" --update --progress /Volumes/External/music/ "192.168.1.227:/sdcard/Music"
-end
-
-function sync_papers
-  rsync -rvz -e "ssh -p 2222" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/papers" "192.168.1.227:/sdcard/Documents/papers/"
-end
-
-function kill_docker
-  ps ax|grep -i docker|egrep -iv 'grep|com.docker.vmnetd'|awk '{print $1}'|xargs kill
-end
+source ~/.config/fish/functions/sync.fish
 
 set -g -x fish_greeting ''
 clear

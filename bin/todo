@@ -47,9 +47,6 @@ die() {
   exit "$code"
 }
 
-TODO_PATH="$HOME/Desktop/monorepo/.todo"
-mkdir -p $TODO_PATH
-
 if [ $# -eq 0 ]; then
   FROM_DATE=$(gdate)
 else
@@ -103,7 +100,12 @@ parse_params() {
 parse_params "$@"
 setup_colors
 
+months=("january" "february" "march" "april" "may" "june" "july" "august" "september" "october" "november" "december")
+
 ###### script logic here ########
+TODO_PATH="$HOME/Desktop/monorepo/.todo/todos"
+mkdir -p $TODO_PATH
+
 TODO_MONTH="$(echo $TODO_DAY | cut -c 1-2)"
 TODO_YEAR="$(echo $TODO_DAY | cut -c 7-11)"
 
@@ -112,7 +114,8 @@ TODO_TO_OPEN="$TODO_PATH/$TODO_YEAR/$TODO_MONTH/$TODO_DAY.md"
 
 if [ ! -f $TODO_TO_OPEN ]; then
 	mkdir -p $TODO_PATH/$TODO_YEAR/$TODO_MONTH
-  echo -e "# $TODO_DAY\n" >> $TODO_TO_OPEN
+  echo -e "# $TODO_DAY\n\n## Todo\n\n## Doing\n\n## Done\n" >> $TODO_TO_OPEN
+  echo "- [$TODO_DAY]($TODO_DAY.md)" >> "$TODO_PATH/$TODO_YEAR/$TODO_MONTH/${months[$TODO_MONTH - 1]}.md"
 fi
 
 ${VISUAL:-${EDITOR:-vi}} $TODO_TO_OPEN

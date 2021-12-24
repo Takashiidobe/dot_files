@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+metadata=()
+readarray -t metadata < metadata.txt
+
+tracks=()
+readarray -t tracks < tracks.txt
+
+mp3s=(*.mp3)
+
+i=0
+for f in "${mp3s[@]}"; do
+  track=$(( i + 1 ))
+  id3tool "$f" -y "${metadata[1]}" -a "${metadata[2]}" -r "${metadata[0]}" -t "${tracks[$i]}" -c "$track"
+  i=$(( i + 1 ))
+done
