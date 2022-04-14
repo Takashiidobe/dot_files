@@ -30,3 +30,10 @@ bind-key h quit
 highlight article "^(Title):.*$" blue default
 highlight article "https?://[^ ]+" red default
 highlight article "\\[image\\ [0-9]+\\]" green default
+
+urls-source "freshrss"
+freshrss-url "https://rss.takashiidobe.com/api/greader.php"
+freshrss-login "freshrss"
+freshrss-password "uKmBwfYNGn3T3rH"
+freshrss-min-items 500
+freshrss-show-special-feeds "false"

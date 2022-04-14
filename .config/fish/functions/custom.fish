@@ -14,7 +14,7 @@ function sync_papers
 end
 
 function dl-mp3 -a URL
-  yt-dlp -x --audio-format mp3 "$URL"
+  yt-dlp -o "%(playlist_index)02d-%(title)s.%(ext)s" -x --audio-format mp3 "$URL"
 end
 
 function dl-video -a URL

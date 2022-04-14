@@ -6,9 +6,14 @@
     excludesfile = /Users/takashi/.gitignore_global
 [pull]
 	  rebase = false
+[push]
+  default = current
 
 [core]
     pager = delta
+
+[advice]
+  detachedHead = false
 
 [delta]
     side-by-side = true
@@ -37,6 +42,7 @@
     diffFilter = delta --color-only
 [init]
 	defaultBranch = master
+	templateDir = /Library/Developer/CommandLineTools/usr/share/git-core/templates
 [credential]
 	helper = osxkeychain
 [commit]

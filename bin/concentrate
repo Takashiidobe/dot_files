@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+networksetup -setairportpower en0 off
+
+countdown "$1"
+
+networksetup -setairportpower en0 on

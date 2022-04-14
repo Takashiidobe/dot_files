@@ -37,8 +37,8 @@ alias vi nvim
 alias vim nvim
 
 set -x GPG_TTY (tty)
-set -gx EDITOR nvim
-set -gx VISUAL nvim
+set -gx EDITOR "/usr/local/bin/nvim"
+set -gx VISUAL "/usr/local/bin/nvim"
 set -gx PAGER bat
 set -gx MANPAGER bat
 set -gx MONOREPO $HOME/Desktop/monorepo
