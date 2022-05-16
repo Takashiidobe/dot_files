@@ -10,7 +10,7 @@ function sync_music
 end
 
 function sync_papers
-  rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/papers" "$ssh_ip:/sdcard/Documents/papers/"
+  rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/" "$ssh_ip:/sdcard/Documents/papers/"
 end
 
 function dl-mp3 -a URL
