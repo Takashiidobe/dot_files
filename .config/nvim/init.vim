@@ -17,22 +17,51 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/lsp_extensions.nvim'
 
 " Autocompletion framework
-Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
 " cmp LSP completion
-Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
 " cmp Snippet completion
-Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
 " cmp Path completion
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-buffer'
-" See hrsh7th other plugins for more great completion sources!
+Plug 'hrsh7th/cmp-path', {'branch': 'main'}
+Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
 
 " Snippet engine
 Plug 'hrsh7th/vim-vsnip'
 
 Plug 'RRethy/nvim-base16'
 
+" Markdown
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
+Plug 'jose-elias-alvarez/null-ls.nvim', {'branch': 'main'}
+
+" Vim Script
+Plug 'kyazdani42/nvim-web-devicons'
+
+Plug 'p00f/clangd_extensions.nvim',  {'branch': 'main'}
+
+" Trim whitespace
+Plug 'cappyzawa/trim.nvim'
 call plug#end()
+
+lua << EOF
+require("null-ls").setup({
+    sources = {
+        require("null-ls").builtins.diagnostics.vale,
+    },
+})
+EOF
+
+lua <<EOF
+  require('trim').setup({
+    -- if you want to ignore markdown file.
+    -- you can specify filetypes.
+    disable = {"txt"},
+
+    -- if you want to ignore space of top
+  })
+EOF
 
 colorscheme base16-onedark
 
@@ -46,6 +75,8 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
+" set relative numbers
+set relativenumber
 
 " Configure lsp
 " https://github.com/neovim/nvim-lspconfig#rust_analyzer
@@ -72,6 +103,18 @@ nvim_lsp.rust_analyzer.setup({
         },
       }
     }
+})
+
+-- Enable clangd
+nvim_lsp.clangd.setup({
+    capabilities=capabilities,
+    settings = {}
+})
+
+-- Enable Pyright
+nvim_lsp.pyright.setup({
+    capabilities=capabilities,
+    settings = {}
 })
 
 -- Enable diagnostics
@@ -135,6 +178,35 @@ cmp.setup({
 })
 EOF
 
+" Make line numbers default
+set number
+
+" Split direction
+set splitbelow
+set splitright
+
+" Set highlight on search
+set hlsearch
+
+" Enable mouse mode
+set mouse=a
+
+" We may need this for toggleterm
+set hidden
+
+" Share clipboard with system
+set clipboard=unnamedplus
+
+" Enable break indent
+set breakindent
+
+" Tab settings
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set autoindent
+set smartindent
+
 " have a fixed column for the diagnostics to appear in
 " this removes the jitter when warnings/errors flow in
 set signcolumn=yes
@@ -142,6 +214,10 @@ set signcolumn=yes
 " Set updatetime for CursorHold
 " 300ms of no cursor movement to trigger CursorHold
 set updatetime=300
+
+" set undofile
+set undofile
+
 " Show diagnostic popup on cursor hover
 autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 
@@ -152,5 +228,5 @@ nnoremap <silent> g] <cmd>lua vim.diagnostic.goto_next()<CR>
 autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
 
 " Enable type inlay hints
-autocmd BufEnter,BufWinEnter,BufWritePost,InsertLeave,TabEnter *.rs
-\ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
+" autocmd BufWinEnter,BufWritePost,InsertLeave,TabEnter *.rs
+" \ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }

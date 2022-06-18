@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -euf -o pipefail
+
+open "http://127.0.0.1:8080/"
+
+miniserve $MONOREPO/notes/site --index $MONOREPO/notes/site/index.html

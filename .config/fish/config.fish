@@ -66,16 +66,9 @@ if status is-login
   set FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --no-ignore-vcs'
 
   set -x GOPATH "$HOME/go"
-  # uncomment when using ruby
-  # rvm default
-
-  # uncomment when using java
-  # status --is-interactive; and source (jenv init -| psub)
-
-  # uncomment when using node
-  nvm use --lts
 end
 
+source /usr/local/opt/asdf/libexec/asdf.fish
 source ~/.config/fish/functions/custom.fish
 
 set -g -x fish_greeting ''

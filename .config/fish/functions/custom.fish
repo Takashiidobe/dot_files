@@ -1,5 +1,5 @@
 set ssh_port 2222
-set ssh_ip 192.168.1.227
+set ssh_ip 192.168.1.14
 
 function sync_books
   rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/books/" "$ssh_ip:/sdcard/Documents/books/"

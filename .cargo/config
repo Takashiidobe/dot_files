@@ -1,3 +1,2 @@
 [build]
 rustc-wrapper = "/usr/local/bin/sccache"
-
