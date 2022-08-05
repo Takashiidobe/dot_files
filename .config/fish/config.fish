@@ -23,11 +23,12 @@ only_add_if_login "/usr/local/smlnj/bin"
 only_add_if_login "/usr/local/opt/luajit-openresty/bin"
 only_add_if_login "/usr/local/Cellar/llvm/13.0.0/bin"
 only_add_if_login "$HOME/.gem/ruby/2.7.0/bin"
-only_add_if_login "$HOME/Library/Python/3.9"
+only_add_if_login "$HOME/Library/Python/3.10"
 
 only_add_if_login "$HOME/.jenv/bin"
 only_add_if_login "$HOME/.rvm/bin/rvm"
 fish_add_path /usr/local/opt/curl/bin
+fish_add_path /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin
 
 alias lynx "lynx -vikeys"
 
@@ -44,7 +45,6 @@ set -gx MANPAGER bat
 set -gx MONOREPO $HOME/Desktop/monorepo
 
 set -gx PKG_CONFIG_PATH "/usr/local/opt/openssl@3/lib/pkgconfig"
-
 
 if status is-login
   [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
