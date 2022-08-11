@@ -119,6 +119,12 @@ nvim_lsp.pyright.setup({
     settings = {}
 })
 
+-- Enable solargraph
+nvim_lsp.solargraph.setup({
+    capabilities=capabilities,
+    settings = {}
+})
+
 -- Enable diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {

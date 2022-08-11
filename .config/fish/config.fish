@@ -73,3 +73,5 @@ source ~/.config/fish/functions/custom.fish
 
 set -g -x fish_greeting ''
 clear
+
+export LESSOPEN="|/usr/local/bin/lesspipe.sh %s"
