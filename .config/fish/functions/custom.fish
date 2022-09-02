@@ -13,6 +13,10 @@ function sync_papers
   rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.androidignore" --progress "$HOME/Desktop/monorepo/papers/" "$ssh_ip:/sdcard/Documents/papers/"
 end
 
+function sync_photos
+  rsync -rvz -e "ssh -p $ssh_port" --update --include-from="$HOME/.photoignore" --progress "$ssh_ip:/sdcard/DCIM/Camera/" "/Volumes/External/pictures/"
+end
+
 function dl-mp3 -a URL
   yt-dlp -o "%(playlist_index)02d-%(title)s.%(ext)s" -x --audio-format mp3 "$URL"
 end

@@ -7,6 +7,7 @@
     "dockerfile-language-server-nodejs": "^0.7.2",
     "foam-cli": "0.9.0",
     "foam-core": "^0.13.7",
+    "joplin": "^2.8.1",
     "lodash": "^4.17.21",
     "markdown-it-wikilinks": "^1.0.1",
     "markdown-lint": "^0.0.4",

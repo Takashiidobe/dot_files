@@ -15,6 +15,9 @@
 [advice]
   detachedHead = false
 
+[diff "bin"]
+  textconv = hexdump -v -C
+
 [delta]
     side-by-side = true
     plus-style = "syntax #012800"

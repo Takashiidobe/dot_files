@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+set -euf -o pipefail
+IFS='\n'
+
+if [ $# -eq 0 ]; then
+  echo "Please provide a name for the script."
+  exit 1
+fi
+
+SCRIPTS_DIR="$MONOREPO/scripts"
+file_name="$(echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
+
+metadata=$(cat << EOF
+#!/usr/bin/env sh
+# ${file_name}.sh
+# Last Updated: $(gdate --iso-8601)
+# Author: Takashi Idobe <mail@takashiidobe.com>
+# Explanation:
+
+EOF
+)
+
+full_path="${SCRIPTS_DIR}/${file_name}.sh"
+
+if [ ! -f "$full_path" ]; then
+  echo "$metadata" > "$full_path"
+  chmod +x "$full_path"
+fi
+
+nvim "${full_path}"
+exit 0

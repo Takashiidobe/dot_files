@@ -13,15 +13,11 @@ only_add_if_login "/usr/local/opt/gnu-tar/libexec/gnubin"
 only_add_if_login "/usr/local/opt/gnu-sed/libexec/gnubin"
 only_add_if_login "/usr/local/opt/make/libexec/gnubin"
 only_add_if_login "/usr/local/opt/inetutils/libexec/gnubin"
-# only_add_if_login "/usr/local/opt/binutils/bin"
 
 only_add_if_login "$HOME/.local/bin"
 only_add_if_login "$GOPATH/bin"
 only_add_if_login "$HOME/.cargo/bin"
 only_add_if_login "$HOME/.deno/bin"
-only_add_if_login "/usr/local/smlnj/bin"
-only_add_if_login "/usr/local/opt/luajit-openresty/bin"
-only_add_if_login "/usr/local/Cellar/llvm/13.0.0/bin"
 only_add_if_login "$HOME/.gem/ruby/2.7.0/bin"
 only_add_if_login "$HOME/Library/Python/3.10"
 
@@ -73,5 +69,3 @@ source ~/.config/fish/functions/custom.fish
 
 set -g -x fish_greeting ''
 clear
-
-export LESSOPEN="|/usr/local/bin/lesspipe.sh %s"

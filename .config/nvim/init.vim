@@ -1,13 +1,3 @@
-" This is an example on how rust-analyzer can be configure using lsp-config
-
-" Prerequisites:
-" - neovim >= 0.5
-" - rust-analyzer: https://rust-analyzer.github.io/manual.html#rust-analyzer-language-server-binary
-
-" Steps:
-" - :PlugInstall
-" - Restart
-
 call plug#begin('~/.vim/plugged')
 
 " Collection of common configurations for the Nvim LSP client
@@ -46,6 +36,13 @@ Plug 'p00f/clangd_extensions.nvim',  {'branch': 'main'}
 
 " Trim whitespace
 Plug 'cappyzawa/trim.nvim'
+
+" Git fugitive
+Plug 'tpope/vim-fugitive'
+
+" Vim rhubarb, for visualizing on github
+Plug 'tpope/vim-rhubarb'
+
 call plug#end()
 
 lua << EOF
@@ -116,10 +113,10 @@ nvim_lsp.clangd.setup({
     settings = {}
 })
 
--- Enable Pyright
+-- Enable pyright
 nvim_lsp.pyright.setup({
-    capabilities=capabilities,
-    settings = {}
+  capabilities=capabilities,
+  settings = {}
 })
 
 -- Enable solargraph
