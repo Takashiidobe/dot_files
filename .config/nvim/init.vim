@@ -43,6 +43,9 @@ Plug 'tpope/vim-fugitive'
 " Vim rhubarb, for visualizing on github
 Plug 'tpope/vim-rhubarb'
 
+" Vim integration with browsers
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+
 call plug#end()
 
 lua << EOF

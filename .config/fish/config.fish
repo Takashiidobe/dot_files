@@ -24,7 +24,8 @@ only_add_if_login "$HOME/Library/Python/3.10"
 only_add_if_login "$HOME/.jenv/bin"
 only_add_if_login "$HOME/.rvm/bin/rvm"
 fish_add_path /usr/local/opt/curl/bin
-fish_add_path /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin
+only_add_if_login "/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin"
+only_add_if_login "/usr/local/lib/python3.10/site-packages"
 
 alias lynx "lynx -vikeys"
 
