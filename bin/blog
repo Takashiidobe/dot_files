@@ -14,7 +14,7 @@ file_name="$(echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')"
 metadata=$(cat << EOF
 ---
 title: "$1"
-date: $(gdate --iso-8601=seconds)
+date: $(date --iso-8601=seconds)
 draft: true
 ---
 EOF
