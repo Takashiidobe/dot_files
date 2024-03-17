@@ -667,30 +667,42 @@ require("lazy").setup({
 	"tpope/vim-rails"
 },
 {
-  'kristijanhusak/vim-dadbod-ui',
-  dependencies = {
-    { 'tpope/vim-dadbod', lazy = true },
-    { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
-  },
-  cmd = {
-    'DBUI',
-    'DBUIToggle',
-    'DBUIAddConnection',
-    'DBUIFindBuffer',
-  },
-  init = function()
-    -- Your DBUI configuration
+	'kristijanhusak/vim-dadbod-ui',
+	dependencies = {
+		{ 'tpope/vim-dadbod', lazy = true },
+		{ 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+	},
+	cmd = {
+		'DBUI',
+		'DBUIToggle',
+		'DBUIAddConnection',
+		'DBUIFindBuffer',
+	},
+	init = function()
+		-- Your DBUI configuration
 		-- vim.g.db_ui_use_nerd_fonts = 1
-  end,
+	end,
+},
+{
+    "williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end,
+},
+{
+	"williamboman/mason-lspconfig.nvim",
+	config = function()
+		require("mason-lspconfig").setup()
+	end,
 },
 -- rust
 { 
-  "nvim-neotest/neotest",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "antoinemadec/FixCursorHold.nvim",
-    "nvim-treesitter/nvim-treesitter"
-  },
+	"nvim-neotest/neotest",
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"antoinemadec/FixCursorHold.nvim",
+		"nvim-treesitter/nvim-treesitter"
+	},
 },
 {
 	'rust-lang/rust.vim',
@@ -707,7 +719,12 @@ require("lazy").setup({
 	version = '^4', -- Recommended
 	ft = { 'rust' },
 	config = function() 
-		vim.g.rustaceanvim = {
+		HOME_PATH = os.getenv("HOME") .. "/"
+		MASON_PATH = HOME_PATH .. "codelldb-x86_64-linux"
+		local codelldb_path = MASON_PATH .. "/extension/adapter/codelldb"
+		local liblldb_path = MASON_PATH .. "/extension/lldb/lib/liblldb.so"
+
+		local opts = {
 			server = {
 				settings = {
 					["rust-analyzer"] = {
@@ -726,8 +743,12 @@ require("lazy").setup({
 						},
 					},
 				},
-			}
+			},
+			dap = {
+				adapter = require('rustaceanvim.config').get_codelldb_adapter(codelldb_path, liblldb_path),
+			},
 		}
+		return opts
 	end
 },
 -- fish
@@ -755,6 +776,8 @@ require("lazy").setup({
 
 local dap = require("dap")
 
+dap.set_log_level("TRACE")
+
 dap.adapters.codelldb = {
 	type = 'server',
 	port = "${port}",
@@ -774,7 +797,7 @@ dap.configurations.rust = {
 			vim.cmd "!cargo build"
 
 			local bin_name = vim.fn.trim(vim.fn.system("cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == \"bin\") | any ) | .name'"))
-			local directory = "/home/takashi/.build/debug"
+			local directory = "target/debug"
 			local filepath = directory .. '/' .. bin_name
 
 			return filepath
@@ -788,60 +811,58 @@ dap.configurations.rust = {
 }
 
 dap.configurations.c = {                                                                                                                
-    {                                                                                                                                         
-       name = "lldb",                                                                                                                         
-       type = "codelldb",                                                                                                                          
-       request = "launch",                                                                                                                    
-       program = function()                                                                                                                   
-          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
-       end,                                                                                                                                   
-       cwd = '${workspaceFolder}',                                                                                                            
-       externalTerminal = false,                                                                                                              
-       stopOnEntry = false,                                                                                                                   
-       args = {}                                                                                                                              
-    },                                                                                                                                        
+	{                                                                                                                                         
+		name = "lldb",                                                                                                                         
+		type = "codelldb",                                                                                                                          
+		request = "launch",                                                                                                                    
+		program = function()                                                                                                                   
+			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
+		end,                                                                                                                                   
+		cwd = '${workspaceFolder}',                                                                                                            
+		externalTerminal = false,                                                                                                              
+		stopOnEntry = false,                                                                                                                   
+		args = {}                                                                                                                              
+	},                                                                                                                                        
 }
 
 dap.configurations.cpp = {                                                                                                                
-    {                                                                                                                                         
-       name = "lldb",                                                                                                                         
-       type = "codelldb",                                                                                                                          
-       request = "launch",                                                                                                                    
-       program = function()                                                                                                                   
-          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
-       end,                                                                                                                                   
-       cwd = '${workspaceFolder}',                                                                                                            
-       externalTerminal = false,                                                                                                              
-       stopOnEntry = false,                                                                                                                   
-       args = {}                                                                                                                              
-    },                                                                                                                                        
+	{                                                                                                                                         
+		name = "lldb",                                                                                                                         
+		type = "codelldb",                                                                                                                          
+		request = "launch",                                                                                                                    
+		program = function()                                                                                                                   
+			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
+		end,                                                                                                                                   
+		cwd = '${workspaceFolder}',                                                                                                            
+		externalTerminal = false,                                                                                                              
+		stopOnEntry = false,                                                                                                                   
+		args = {}                                                                                                                              
+	},                                                                                                                                        
 }
 
 -- Erlang config, haven't figured this out yet.
--- dap.adapters.els_dap = {
--- 	type = 'executable',
--- 	executable = '/home/takashi/.local/bin/els_dap',
--- }
+dap.adapters.els_dap = {
+	type = 'executable',
+	executable = '/home/takashi/.local/bin/els_dap',
+}
 -- 
--- dap.configurations.erlang = {
--- 	{
--- 		name = "Launch file",
--- 		type = "els_dap",
--- 		request = "attach",
--- 		program = '${relativeFileDirname}/${fileBasenameNoExtension}.beam',
--- 		-- function() 
--- 		-- 	local filename = vim.fn.trim(vim.fn.expand('%:p'))
--- 		-- 	local compiler = "erlc"
--- 		-- 	local compile_cmd = compiler .. ' ' .. filename
--- 		-- 	print(compile_cmd)
--- 		-- 	vim.fn.system(compile_cmd)
--- 		-- 	return '/home/takashi/programming-erlang/ch12/area_server0.beam'
--- 			-- 
--- 		-- end,
--- 		cwd = '${workspaceFolder}',
--- 		stopOnEntry = true,
--- 	},
--- }
+dap.configurations.erlang = {
+	{
+		name = "Launch file",
+		type = "els_dap",
+		request = "attach",
+		program = function() 
+			local filename = vim.fn.trim(vim.fn.expand('%:p'))
+			local compiler = "erlc"
+			local compile_cmd = compiler .. ' ' .. filename
+			print(compile_cmd)
+			vim.fn.system(compile_cmd)
+			return '/home/takashi/programming-erlang/ch12/area_server0.beam'
+		end,
+		cwd = '${workspaceFolder}',
+		stopOnEntry = true,
+	},
+}
 
 
 local dapui = require("dapui")
@@ -862,30 +883,30 @@ dapui.setup {
 		},
 	},
 	layouts = { 
-			-- {
-			-- elements = { 
-				-- {
-				-- 	id = "scopes",
-				-- 	size = 0.25
-				-- }, 
-				-- {
-				-- 	id = "stacks",
-				-- 	size = 0.25
-				-- }, 
-				-- {
-				-- 	id = "watches",
-				-- 	size = 0.25
-				-- } 
-				-- {
-				-- 	id = "breakpoints",
-				-- 	size = 0.33
-				-- }, 
-			-- },
-				-- position = "left",
-			--	size = 10
-			--}, 
-			{
-				elements = { 
+		-- {
+		-- elements = { 
+		-- {
+		-- 	id = "scopes",
+		-- 	size = 0.25
+		-- }, 
+		-- {
+		-- 	id = "stacks",
+		-- 	size = 0.25
+		-- }, 
+		-- {
+		-- 	id = "watches",
+		-- 	size = 0.25
+		-- } 
+		-- {
+		-- 	id = "breakpoints",
+		-- 	size = 0.33
+		-- }, 
+		-- },
+		-- position = "left",
+		--	size = 10
+		--}, 
+		{
+			elements = { 
 				{
 					id = "scopes",
 					size = 0.3
@@ -899,37 +920,37 @@ dapui.setup {
 					size = 0.33
 				} 
 			},
-				position = "bottom",
-				size = 20
-			} 
-		},
-	}
-	dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-	dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-	dap.listeners.before.event_exited['dapui_config'] = dapui.close
+			position = "bottom",
+			size = 20
+		} 
+	},
+}
+dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-	-- ocaml 
-	dap.adapters.ocamlearlybird = {
-	  type = 'executable',
-	  command = 'ocamlearlybird',
-	  args = { 'debug' }
-	}
-	
-	dap.configurations.ocaml = {
-	  {
-	    name = 'OCaml Debug main.bc',
-	    type = 'ocamlearlybird',
-	    request = 'launch',
-	    program = function()
-				vim.cmd "!dune build"
-				return '_build/default/${relativeFileDirname}/${fileBasenameNoExtension}.bc'
-			end,
-			cwd = "${workspaceFolder}",
-	    stopOnEntry = true,
-	  },
-	}
+-- ocaml 
+dap.adapters.ocamlearlybird = {
+	type = 'executable',
+	command = 'ocamlearlybird',
+	args = { 'debug' }
+}
 
-	-- neotest config
+dap.configurations.ocaml = {
+	{
+		name = 'OCaml Debug main.bc',
+		type = 'ocamlearlybird',
+		request = 'launch',
+		program = function()
+			vim.cmd "!dune build"
+			return '_build/default/${relativeFileDirname}/${fileBasenameNoExtension}.bc'
+		end,
+		cwd = "${workspaceFolder}",
+		stopOnEntry = true,
+	},
+}
+
+-- neotest config
 local neotest = require("neotest")
 neotest.setup({
 	adapters = {
@@ -937,49 +958,49 @@ neotest.setup({
 	},
 })
 
-	vim.keymap.set('n', '<leader>dc', function() dap.continue() end)
-	vim.keymap.set('n', '<leader>do', function() dap.step_over() end)
-	vim.keymap.set('n', '<leader>ds', function() dap.step_into() end)
-	vim.keymap.set('n', '<leader>dx', function() dap.step_out() end)
-	vim.keymap.set('n', '<leader>b',  function() dap.toggle_breakpoint() end)
-	vim.keymap.set('n', '<leader>dl', function() dap.run_last() end)
-	vim.keymap.set('n', '<leader>df', function() dapui.float_element('scopes', { enter = true }) end)
-	vim.keymap.set('n', '<leader>du', function() dapui.open() end)
+vim.keymap.set('n', '<leader>dc', function() dap.continue() end)
+vim.keymap.set('n', '<leader>do', function() dap.step_over() end)
+vim.keymap.set('n', '<leader>ds', function() dap.step_into() end)
+vim.keymap.set('n', '<leader>dx', function() dap.step_out() end)
+vim.keymap.set('n', '<leader>b',  function() dap.toggle_breakpoint() end)
+vim.keymap.set('n', '<leader>dl', function() dap.run_last() end)
+vim.keymap.set('n', '<leader>df', function() dapui.float_element('scopes', { enter = true }) end)
+vim.keymap.set('n', '<leader>du', function() dapui.open() end)
 
-	--[[
+--[[
 
-	leftover things from init.vim that i may still end up wanting
+leftover things from init.vim that i may still end up wanting
 
-	" Completion
-	" Better completion
-	" menuone: popup even when there's only one match
-	" noinsert: Do not insert text until a selection is made
-	" noselect: Do not select, force user to select one from the menu
-	set completeopt=menuone,noinsert,noselect
+" Completion
+" Better completion
+" menuone: popup even when there's only one match
+" noinsert: Do not insert text until a selection is made
+" noselect: Do not select, force user to select one from the menu
+set completeopt=menuone,noinsert,noselect
 
-	" Settings needed for .lvimrc
-	set exrc
-	set secure
+" Settings needed for .lvimrc
+set exrc
+set secure
 
-	" Wrapping options
-	set formatoptions=tc " wrap text and comments using textwidth
-	set formatoptions+=r " continue comments when pressing ENTER in I mode
-	set formatoptions+=q " enable formatting of comments with gq
-	set formatoptions+=n " detect lists for formatting
-	set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
+" Wrapping options
+set formatoptions=tc " wrap text and comments using textwidth
+set formatoptions+=r " continue comments when pressing ENTER in I mode
+set formatoptions+=q " enable formatting of comments with gq
+set formatoptions+=n " detect lists for formatting
+set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
 
-	" <leader>s for Rg search
-	noremap <leader>s :Rg
-	let g:fzf_layout = { 'down': '~20%' }
-	command! -bang -nargs=* Rg
-	\ call fzf#vim#grep(
-	\   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-	\   <bang>0 ? fzf#vim#with_preview('up:60%')
-	\           : fzf#vim#with_preview('right:50%:hidden', '?'),
-	\   <bang>0)
+" <leader>s for Rg search
+noremap <leader>s :Rg
+let g:fzf_layout = { 'down': '~20%' }
+command! -bang -nargs=* Rg
+\ call fzf#vim#grep(
+\   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+\   <bang>0 ? fzf#vim#with_preview('up:60%')
+\           : fzf#vim#with_preview('right:50%:hidden', '?'),
+\   <bang>0)
 
-	" <leader>q shows stats
-	nnoremap <leader>q g<c-g>
+" <leader>q shows stats
+nnoremap <leader>q g<c-g>
 
-	--]]
+--]]
 
