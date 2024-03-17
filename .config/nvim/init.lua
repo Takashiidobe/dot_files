@@ -720,9 +720,9 @@ require("lazy").setup({
 	ft = { 'rust' },
 	config = function() 
 		HOME_PATH = os.getenv("HOME") .. "/"
-		MASON_PATH = HOME_PATH .. "codelldb-x86_64-linux"
-		local codelldb_path = MASON_PATH .. "/extension/adapter/codelldb"
-		local liblldb_path = MASON_PATH .. "/extension/lldb/lib/liblldb.so"
+		MASON_PATH = HOME_PATH .. ".local/share/nvim/mason/"
+		local codelldb_path = MASON_PATH .. "bin/codelldb"
+		local liblldb_path = MASON_PATH .. "packages/codelldb/extension/lldb/lib/liblldb.so"
 
 		local opts = {
 			server = {
