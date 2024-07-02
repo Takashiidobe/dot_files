@@ -244,12 +244,12 @@ vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
 	{
-		"folke/tokyonight.nvim",
+		"EdenEast/nightfox.nvim",
 		lazy = false, -- make sure we load this during startup if it is your main colorscheme
 		priority = 1000, -- make sure to load this before all the other start plugins
 		config = function()
 			-- load the colorscheme here
-			vim.cmd([[colorscheme tokyonight]])
+			vim.cmd([[colorscheme nightfox]])
 		end,
 	},
 	-- nice bar at the bottom
@@ -340,7 +340,7 @@ require("lazy").setup({
 	-- Format on Save
 	{
 		'elentok/format-on-save.nvim',
-		config = function() 
+		config = function()
 			local format_on_save = require("format-on-save")
 			local formatters = require("format-on-save.formatters")
 			format_on_save.setup({
@@ -374,7 +374,7 @@ require("lazy").setup({
 			end
 		},
 		-- DAP setup
-		{ "rcarriga/nvim-dap-ui", 
+		{ "rcarriga/nvim-dap-ui",
 		dependencies = {
 			{'mfussenegger/nvim-dap'}
 		}
@@ -644,6 +644,14 @@ require("lazy").setup({
 		})
 	end
 },
+-- Devicons,
+{
+	'ryanoasis/vim-devicons'
+},
+-- Literate programming
+{
+	'zyedidia/literate.vim',
+},
 -- language support
 -- terraform
 {
@@ -699,7 +707,7 @@ require("lazy").setup({
 	end,
 },
 -- rust
-{ 
+{
 	"nvim-neotest/neotest",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
@@ -721,7 +729,7 @@ require("lazy").setup({
 	'mrcjkb/rustaceanvim',
 	version = '^4', -- Recommended
 	ft = { 'rust' },
-	config = function() 
+	config = function()
 		HOME_PATH = os.getenv("HOME") .. "/"
 		MASON_PATH = HOME_PATH .. ".local/share/nvim/mason/"
 		local codelldb_path = MASON_PATH .. "bin/codelldb"
@@ -800,7 +808,7 @@ dap.configurations.rust = {
 			vim.cmd "!cargo build"
 
 			local bin_name = vim.fn.trim(vim.fn.system("cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == \"bin\") | any ) | .name'"))
-			local directory = "target/debug"
+			local directory = "./target/debug"
 			local filepath = directory .. '/' .. bin_name
 
 			return filepath
@@ -813,34 +821,34 @@ dap.configurations.rust = {
 	},
 }
 
-dap.configurations.c = {                                                                                                                
-	{                                                                                                                                         
-		name = "lldb",                                                                                                                         
-		type = "codelldb",                                                                                                                          
-		request = "launch",                                                                                                                    
-		program = function()                                                                                                                   
-			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
-		end,                                                                                                                                   
-		cwd = '${workspaceFolder}',                                                                                                            
-		externalTerminal = false,                                                                                                              
-		stopOnEntry = false,                                                                                                                   
-		args = {}                                                                                                                              
-	},                                                                                                                                        
+dap.configurations.c = {
+	{
+		name = "lldb",
+		type = "codelldb",
+		request = "launch",
+		program = function()
+			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+		end,
+		cwd = '${workspaceFolder}',
+		externalTerminal = false,
+		stopOnEntry = false,
+		args = {}
+	},
 }
 
-dap.configurations.cpp = {                                                                                                                
-	{                                                                                                                                         
-		name = "lldb",                                                                                                                         
-		type = "codelldb",                                                                                                                          
-		request = "launch",                                                                                                                    
-		program = function()                                                                                                                   
-			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')                                                         
-		end,                                                                                                                                   
-		cwd = '${workspaceFolder}',                                                                                                            
-		externalTerminal = false,                                                                                                              
-		stopOnEntry = false,                                                                                                                   
-		args = {}                                                                                                                              
-	},                                                                                                                                        
+dap.configurations.cpp = {
+	{
+		name = "lldb",
+		type = "codelldb",
+		request = "launch",
+		program = function()
+			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+		end,
+		cwd = '${workspaceFolder}',
+		externalTerminal = false,
+		stopOnEntry = false,
+		args = {}
+	},
 }
 
 -- Erlang config, haven't figured this out yet.
@@ -848,13 +856,13 @@ dap.adapters.els_dap = {
 	type = 'executable',
 	executable = '/home/takashi/.local/bin/els_dap',
 }
--- 
+--
 dap.configurations.erlang = {
 	{
 		name = "Launch file",
 		type = "els_dap",
 		request = "attach",
-		program = function() 
+		program = function()
 			local filename = vim.fn.trim(vim.fn.expand('%:p'))
 			local compiler = "erlc"
 			local compile_cmd = compiler .. ' ' .. filename
@@ -885,54 +893,54 @@ dapui.setup {
 			disconnect = '⏏',
 		},
 	},
-	layouts = { 
+	layouts = {
 		-- {
-		-- elements = { 
+		-- elements = {
 		-- {
 		-- 	id = "scopes",
 		-- 	size = 0.25
-		-- }, 
+		-- },
 		-- {
 		-- 	id = "stacks",
 		-- 	size = 0.25
-		-- }, 
+		-- },
 		-- {
 		-- 	id = "watches",
 		-- 	size = 0.25
-		-- } 
+		-- }
 		-- {
 		-- 	id = "breakpoints",
 		-- 	size = 0.33
-		-- }, 
+		-- },
 		-- },
 		-- position = "left",
 		--	size = 10
-		--}, 
+		--},
 		{
-			elements = { 
+			elements = {
 				{
 					id = "scopes",
 					size = 0.3
-				}, 
+				},
 				{
 					id = "repl",
 					size = 0.33
-				}, 
+				},
 				{
 					id = "console",
 					size = 0.33
-				} 
+				}
 			},
 			position = "bottom",
 			size = 20
-		} 
+		}
 	},
 }
 dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 dap.listeners.before.event_terminated['dapui_config'] = dapui.close
 dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
--- ocaml 
+-- ocaml
 dap.adapters.ocamlearlybird = {
 	type = 'executable',
 	command = 'ocamlearlybird',
@@ -969,6 +977,17 @@ vim.keymap.set('n', '<leader>b',  function() dap.toggle_breakpoint() end)
 vim.keymap.set('n', '<leader>dl', function() dap.run_last() end)
 vim.keymap.set('n', '<leader>df', function() dapui.float_element('scopes', { enter = true }) end)
 vim.keymap.set('n', '<leader>du', function() dapui.open() end)
+
+-- set vim's clipboard to the system
+vim.opt.clipboard="unnamedplus"
+
+-- trim trailing whitespace
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*" },
+  command = [[%s/\s\+$//e]],
+})
+
+
 
 --[[
 
