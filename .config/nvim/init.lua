@@ -248,6 +248,11 @@ require("lazy").setup({
 		lazy = false, -- make sure we load this during startup if it is your main colorscheme
 		priority = 1000, -- make sure to load this before all the other start plugins
 		config = function()
+			options = {
+				styles = {
+					comments = "bold"
+				}
+			}
 			-- load the colorscheme here
 			vim.cmd([[colorscheme nightfox]])
 		end,
@@ -299,6 +304,34 @@ require("lazy").setup({
 		config = function()
 			vim.g.matchup_matchparen_offscreen = { method = "popup" }
 		end
+	},
+	{
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html",
+    dependencies = {
+        "nvim-telescope/telescope.nvim",
+        "nvim-lua/plenary.nvim", -- required by telescope
+        "MunifTanjim/nui.nvim",
+
+        -- optional
+        "nvim-treesitter/nvim-treesitter",
+        "rcarriga/nvim-notify",
+        "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+				lang = "python3",
+				injector = {
+					["python3"] = {
+						before = {},
+						after = "def test():\n\tassert(2 + 2 == 4)\n"
+					},
+				},
+				theme = {
+    			["normal"] = {
+    			    fg = "#FAF9F6",
+    			},
+				}
+    },
 	},
 	-- auto-cd to root of git project
 	-- 'airblade/vim-rooter'
@@ -355,11 +388,13 @@ require("lazy").setup({
 					css = formatters.lsp,
 					html = formatters.lsp,
 					java = formatters.lsp,
+					go = formatters.lsp,
 					javascript = formatters.lsp,
 					json = formatters.lsp,
 					lua = formatters.lsp,
 					markdown = formatters.lsp,
-					python = formatters.lsp,
+					python = formatters.black,
+					python3 = formatters.black,
 					ruby = formatters.lsp,
 					rust = formatters.lsp,
 					scss = formatters.lsp,
@@ -370,13 +405,24 @@ require("lazy").setup({
 					yaml = formatters.lsp,
 					erlang = formatters.lsp,
 					ocaml = formatters.lsp,
-				}})
+					bib = formatters.lsp,
+				},
+				python = {
+					formatters.remove_trailing_whitespace,
+      		formatters.shell({ cmd = "tidy-imports" }),
+      		formatters.black,
+      		formatters.ruff,
+				}
+			})
 			end
 		},
 		-- DAP setup
 		{ "rcarriga/nvim-dap-ui",
 		dependencies = {
-			{'mfussenegger/nvim-dap'}
+			{
+				'mfussenegger/nvim-dap',
+				'nvim-neotest/nvim-nio',
+			}
 		}
 	},
 	{
@@ -396,6 +442,10 @@ require("lazy").setup({
 	},
 	-- Vim Fugitive
 	{'tpope/vim-fugitive'},
+	{
+  'kaarmu/typst.vim',
+		ft = 'typst',
+	},
 	-- LSP
 	{
 		'neovim/nvim-lspconfig',
@@ -410,10 +460,25 @@ require("lazy").setup({
 			lspconfig.clangd.setup{}
 
 			-- Python
-			lspconfig.pyright.setup{}
+			lspconfig.jedi_language_server.setup{}
+
+			lspconfig.typst_lsp.setup{}
 
 			-- OCaml
 			lspconfig.ocamllsp.setup{}
+
+			-- Go
+			lspconfig.gopls.setup({
+			  settings = {
+			    gopls = {
+			      analyses = {
+			        unusedparams = true,
+			      },
+			      staticcheck = true,
+			      gofumpt = true,
+			    },
+			  },
+			})
 
 			-- Ruby
 			-- textDocument/diagnostic support until 0.10.0 is released
@@ -499,7 +564,7 @@ require("lazy").setup({
 		end
 
 
-		lspconfig.ruby_ls.setup({
+		lspconfig.ruby_lsp.setup({
 			on_attach = function(client, buffer)
 				setup_diagnostics(client, buffer)
 				add_ruby_deps_command(client, buffer)
@@ -726,6 +791,9 @@ require("lazy").setup({
 	end
 },
 {
+	'nvim-neotest/neotest-python'
+},
+{
 	'mrcjkb/rustaceanvim',
 	version = '^4', -- Recommended
 	ft = { 'rust' },
@@ -783,6 +851,10 @@ require("lazy").setup({
 		vim.g.vim_markdown_auto_insert_bullets = 0
 	end
 },
+-- vim surround
+{
+	'tpope/vim-surround'
+}
 })
 
 local dap = require("dap")
@@ -966,6 +1038,7 @@ local neotest = require("neotest")
 neotest.setup({
 	adapters = {
 		require("rustaceanvim.neotest"),
+    require("neotest-python"),
 	},
 })
 

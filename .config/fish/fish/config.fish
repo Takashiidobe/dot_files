@@ -7,8 +7,6 @@ fish_add_path "/usr/share/bcc/tools"
 fish_add_path "$HOME/.ghcup/bin"
 fish_add_path "$HOME/.yarn/bin"
 fish_add_path "$HOME/.wasmtime/bin"
-fish_add_path "$HOME/.local/share/nvim/mason/bin"
-fish_add_path "$HOME/.nimble/bin"
 
 set -gx FLYCTL_INSTALL "$HOME/.fly"
 fish_add_path "$FLYCTL_INSTALL/bin"
@@ -22,8 +20,8 @@ fish_vi_key_bindings
 alias vi nvim
 alias vim nvim
 alias open xdg-open
+
 alias airplane-mode "rfkill toggle all"
-alias cha "cha -T text/html -I utf8"
 
 set -x GPG_TTY (tty)
 set -gx EDITOR "/bin/nvim"
@@ -57,7 +55,7 @@ set FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --no-ignore-vcs'
 source ~/.config/fish/functions/custom.fish
 
 set -g -x fish_greeting ''
-set -gx OPENAI_API_KEY (pass openai-api-key)
+set -gx OPENAI_API_KEY "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"
 # clear
 
 # opam configuration
