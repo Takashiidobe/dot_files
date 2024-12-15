@@ -10,4 +10,3 @@ registry = "sparse+http://localhost:27428/index/"
 
 [source.crates-io]
 replace-with = "panamax-sparse"
-
