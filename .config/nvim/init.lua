@@ -333,12 +333,10 @@ require("lazy").setup({
 				}
     },
 	},
-	-- auto-cd to root of git project
-	-- 'airblade/vim-rooter'
 	{
-		'notjedi/nvim-rooter.lua',
+		'ahmedkhalf/project.nvim',
 		config = function()
-			require('nvim-rooter').setup()
+			require('project_nvim').setup {}
 		end
 	},
 	-- fzf support for ^p
@@ -694,21 +692,11 @@ require("lazy").setup({
 	},
 },
 {
-	'rust-lang/rust.vim',
-	ft = { "rust" },
-	config = function()
-		vim.g.rustfmt_autosave = 1
-		vim.g.rustfmt_emit_files = 1
-		vim.g.rustfmt_fail_silently = 0
-		vim.g.rust_clip_command = 'wl-copy'
-	end
-},
-{
 	'nvim-neotest/neotest-python'
 },
 {
 	'mrcjkb/rustaceanvim',
-	version = '^4', -- Recommended
+	version = '^5', -- Recommended
 	ft = { 'rust' },
 	config = function()
 		HOME_PATH = os.getenv("HOME") .. "/"
@@ -725,7 +713,7 @@ require("lazy").setup({
 						},
 						imports = {
 							group = {
-								enable = false,
+								enable = true,
 							},
 						},
 						completion = {
@@ -972,9 +960,6 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*" },
   command = [[%s/\s\+$//e]],
 })
-
-
-
 --[[
 
 leftover things from init.vim that i may still end up wanting
