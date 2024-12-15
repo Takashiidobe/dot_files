@@ -80,7 +80,9 @@ vim.opt.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
 --
 -------------------------------------------------------------------------------
 -- quick-open
-vim.keymap.set('', '<C-p>', '<cmd>Files<cr>')
+vim.keymap.set('', '<C-p>', '<cmd>Telescope find_files<cr>')
+-- search in files
+vim.keymap.set('', '<C-o>', '<cmd>Telescope live_grep<cr>')
 -- search buffers
 vim.keymap.set('n', '<leader>;', '<cmd>Buffers<cr>')
 -- quick-save
